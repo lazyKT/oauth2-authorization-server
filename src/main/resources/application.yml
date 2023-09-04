@@ -1,0 +1,25 @@
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 321887139601-vc3eo5m1d49trc1dghol10r2oi90lmrs.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - profile
+              - openid
+              - email
+            client-name: Sign in with Google
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+            user-name-attribute: sub
