@@ -27,6 +27,8 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationConsentService;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationContext;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationProvider;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationValidator;
@@ -36,6 +38,7 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
@@ -74,6 +77,7 @@ public class SecurityConfig {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+            .authorizationEndpoint(authEndPoint -> authEndPoint.consentPage("/oauth2/consent"))
             .oidc(Customizer.withDefaults()); // Enable OpenID Connect 1.0
 
         http.exceptionHandling(
@@ -138,6 +142,9 @@ public class SecurityConfig {
                         .accessTokenTimeToLive(Duration.ofDays(1))
                         .build()
                 )
+                .clientSettings(
+                        ClientSettings.builder().requireAuthorizationConsent(true).build()
+                )
                 .build();
         return new InMemoryRegisteredClientRepository(registeredClient);
     }
@@ -164,5 +171,10 @@ public class SecurityConfig {
         return (context) -> {
             context.getClaims().claim("google-oauth2", "google-oauth2");
         };
+    }
+
+    @Bean
+    public OAuth2AuthorizationConsentService auth2AuthorizationConsentService () {
+        return new InMemoryOAuth2AuthorizationConsentService();
     }
 }
