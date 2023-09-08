@@ -4,13 +4,19 @@ logging:
       springframework:
         security: TRACE
 spring:
+  sql:
+    init:
+      schema-locations:
+        - 'classpath:org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql'
+        - 'classpath:org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql'
+        - 'classpath:org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql'
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: 321887139601-vc3eo5m1d49trc1dghol10r2oi90lmrs.apps.googleusercontent.com
-            client-secret: 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
+            client-id: <client-id>
+            client-secret: <client-secret>
             scope:
               - profile
               - openid

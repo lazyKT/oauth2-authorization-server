@@ -47,7 +47,10 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -93,9 +96,16 @@ public class SecurityConfig {
     }
 
 
+//    @Bean
+//    public MvcRequestMatcher.Builder mvc (HandlerMappingIntrospector introspector) {
+//        return new MvcRequestMatcher.Builder(introspector).servletPath("/mvc");
+//    }
+
     @Bean
     @Order(2)
-    public SecurityFilterChain defaultSecurityFilterChain (HttpSecurity http) throws Exception {
+    public SecurityFilterChain defaultSecurityFilterChain (
+        HttpSecurity http
+    ) throws Exception {
         http.authorizeHttpRequests(
                 (authorize) -> authorize
                         .requestMatchers("/login", "/error").permitAll()
